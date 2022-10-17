@@ -1189,6 +1189,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0bceab11b17004d81bed52281bf1dab9, type: 2}
   - {fileID: 11400000, guid: 6f6df7f45bd894395a9e60addbbfabd1, type: 2}
   - {fileID: 11400000, guid: 1ab036711f98d4f5087035dcd6d3bd3d, type: 2}
+  selectedColour: {r: 0.38431358, g: 1, b: 0, a: 1}
+  notSelectedColour: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

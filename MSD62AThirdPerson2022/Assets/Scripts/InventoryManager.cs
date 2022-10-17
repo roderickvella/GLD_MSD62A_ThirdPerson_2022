@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -14,6 +16,12 @@ public class InventoryManager : MonoBehaviour
     [Tooltip("List of items")]
     public List<ItemScriptableObject> itemsAvailable;
 
+    [Tooltip("Selected Item Colour")]
+    public Color selectedColour;
+
+    [Tooltip("Not Selected Item Colour")]
+    public Color notSelectedColour;
+
     private List<InventoryItem> itemsForPlayer; //the items visible to the player during the game
 
     // Start is called before the first frame update
@@ -21,12 +29,19 @@ public class InventoryManager : MonoBehaviour
     {
         itemsForPlayer = new List<InventoryItem>();
         PopulateInventorySpawn();
+        RefreshInventoryGUI();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.K))
+            ChangeSelection();
+    }
+
+    private void ChangeSelection()
+    {
+
     }
 
     /// <summary>
@@ -45,17 +60,49 @@ public class InventoryManager : MonoBehaviour
             //many times an item appears. i.e the number of objItems inside itemsForPlayer
             int countItems = itemsForPlayer.Where(x => x.item == objItem).ToList().Count;
 
-            itemsForPlayer.Add(new InventoryItem() { item = objItem, quantity = 1 });
+            if(countItems == 0)
+            {
+                //add objItem with quantity of 1 because it is the first type inside itemsForPlayer
+                itemsForPlayer.Add(new InventoryItem() { item = objItem, quantity = 1 });
+            }
+            else
+            {
+                //search for the element of the same type inside itemsForPlayer
+                var item = itemsForPlayer.First(x => x.item == objItem);
+                //increase the quantity by 1
+                item.quantity += 1;
+            }
 
-            //->this code is like the above line
-                //InventoryItem inventoryItem = new InventoryItem();
-                //inventoryItem.item = objItem;
-                //inventoryItem.quantity = 1;
-                //itemsForPlayer.Add(inventoryItem);
 
         }
 
         print("Number of Inventory Items for Player:"+ itemsForPlayer.Count);
+
+    }
+
+    private void RefreshInventoryGUI(){
+        int buttonId = 0;
+
+        foreach(InventoryItem i in itemsForPlayer)
+        {
+            //load the button
+            GameObject button = itemsSelectionPanel.transform.Find("Button" + buttonId).gameObject;
+
+            //search for the child image and change its sprite
+            button.transform.Find("Image").GetComponent<Image>().sprite = i.item.icon;
+
+            //change the quantity
+            button.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = "x" + i.quantity;
+
+            buttonId += 1;
+
+        }
+
+        //set active false redundant buttons
+        for(int i=buttonId; i<3; i++)
+        {
+            itemsSelectionPanel.transform.Find("Button" + i).gameObject.SetActive(false);
+        }
 
     }
 
