@@ -24,9 +24,20 @@ public class InventoryManager : MonoBehaviour
 
     private List<InventoryItem> itemsForPlayer; //the items visible to the player during the game
 
+    public int currentSelectedIndex = 0; //by default start/select the first button in the inventory system
+
+    private Animator animator;
+
+    [Tooltip("Show Inventory GUI")]
+    public bool showInventory = false;
+
+  
     // Start is called before the first frame update
     void Start()
     {
+        //load the controller so that we can play the animations (inventoryIn/inventoryOut)
+        animator = itemsSelectionPanel.GetComponent<Animator>();
+
         itemsForPlayer = new List<InventoryItem>();
         PopulateInventorySpawn();
         RefreshInventoryGUI();
@@ -37,11 +48,67 @@ public class InventoryManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.K))
             ChangeSelection();
+        else if (Input.GetKeyDown(KeyCode.Return))
+            ConfirmSelection();
+        
+    }
+
+    public void ShowToggleInventory()
+    {
+        if(showInventory == false)
+        {
+            showInventory = true;
+            animator.SetTrigger("InventoryIn");
+        }
+        else
+        {
+            showInventory = false;
+            animator.SetTrigger("InventoryOut");
+        }
+    }
+
+    private void ConfirmSelection()
+    {
+        if(itemsForPlayer.Count != 0)
+        {
+            //get the item from the itemsForPlayer list using the currentSelectedIndex
+            InventoryItem inventoryItem = itemsForPlayer[currentSelectedIndex];
+            print("Item Selected is:" + inventoryItem.item.name);
+
+            //reduce the quantity by 1
+            inventoryItem.quantity -= 1;
+
+            //check if the quantity is 0, if it is we need to remove this item from the itemsForPlayer list
+            if (inventoryItem.quantity == 0)
+                itemsForPlayer.RemoveAt(currentSelectedIndex);
+
+            RefreshInventoryGUI();
+        }
+   
+
     }
 
     private void ChangeSelection()
     {
+        //move to the left hand side
+        if (Input.GetKeyDown(KeyCode.J))
+        {
+            currentSelectedIndex -= 1;
+        }
+        //move to the right hand side
+        else if (Input.GetKeyDown(KeyCode.K))
+        {
+            currentSelectedIndex += 1;
+        }
 
+        //check boundaries
+        if (currentSelectedIndex < 0)
+            currentSelectedIndex = 0;
+
+        if (currentSelectedIndex == itemsForPlayer.Count)
+            currentSelectedIndex = currentSelectedIndex - 1;
+
+        RefreshInventoryGUI();
     }
 
     /// <summary>
@@ -93,6 +160,16 @@ public class InventoryManager : MonoBehaviour
 
             //change the quantity
             button.transform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = "x" + i.quantity;
+
+            //show selected/not selected colour based on buttonId and currentSelectedIndex
+            if(buttonId == currentSelectedIndex)
+            {
+                button.GetComponent<Image>().color = selectedColour;
+            }
+            else
+            {
+                button.GetComponent<Image>().color = notSelectedColour;
+            }
 
             buttonId += 1;
 
