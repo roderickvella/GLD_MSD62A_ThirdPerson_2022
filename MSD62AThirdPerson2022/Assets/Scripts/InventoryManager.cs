@@ -46,10 +46,10 @@ public class InventoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.K))
-            ChangeSelection();
-        else if (Input.GetKeyDown(KeyCode.Return))
-            ConfirmSelection();
+        //if (Input.GetKeyDown(KeyCode.J) || Input.GetKeyDown(KeyCode.K))
+        //    ChangeSelection();
+        //else if (Input.GetKeyDown(KeyCode.Return))
+        //    ConfirmSelection();
         
     }
 
@@ -67,7 +67,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void ConfirmSelection()
+    public void ConfirmSelection()
     {
         if(itemsForPlayer.Count != 0)
         {
@@ -88,18 +88,23 @@ public class InventoryManager : MonoBehaviour
 
     }
 
-    private void ChangeSelection()
+    public void ChangeSelection(bool moveLeft)
     {
         //move to the left hand side
-        if (Input.GetKeyDown(KeyCode.J))
-        {
+        //if (Input.GetKeyDown(KeyCode.J))
+        //{
+        //    currentSelectedIndex -= 1;
+        //}
+        ////move to the right hand side
+        //else if (Input.GetKeyDown(KeyCode.K))
+        //{
+        //    currentSelectedIndex += 1;
+        //}
+
+        if (moveLeft == true)
             currentSelectedIndex -= 1;
-        }
-        //move to the right hand side
-        else if (Input.GetKeyDown(KeyCode.K))
-        {
+        else
             currentSelectedIndex += 1;
-        }
 
         //check boundaries
         if (currentSelectedIndex < 0)
