@@ -37,20 +37,48 @@ public class GameManager : MonoBehaviour
 
     public void OnButtonPressed(string key)
     {
-        switch (key)
+        if(gameState == GameState.AreaA)
         {
-            case "TAB":
-                ShowToggleInventory();
-                break;
-            case "K":
-                canvas.GetComponentInChildren<InventoryManager>().ChangeSelection(false);
-                break;
-            case "J":
-                canvas.GetComponentInChildren<InventoryManager>().ChangeSelection(true);
-                break;
-            case "RETURN":
-                canvas.GetComponentInChildren<InventoryManager>().ConfirmSelection();
-                break;
+            switch (key)
+            {
+                case "TAB":
+                    ShowToggleInventory();
+                    break;
+                case "K":
+                    canvas.GetComponentInChildren<InventoryManager>().ChangeSelection(false);
+                    break;
+                case "J":
+                    canvas.GetComponentInChildren<InventoryManager>().ChangeSelection(true);
+                    break;
+                case "RETURN":
+                    canvas.GetComponentInChildren<InventoryManager>().ConfirmSelection();
+                    break;
+            }
+        }
+        else if(gameState == GameState.AreaB)
+        {
+            switch (key)
+            {
+                case "TAB":
+                    print("Hide the coin");
+                    GameObject coin = GameObject.Find("Plane2/Coin");
+                    if (coin != null) coin.SetActive(false);
+                    break;
+            }
+        }
+       
+    }
+
+    public void OnMouseButtonPressed(int mouse)
+    {
+        if(gameState == GameState.AreaA)
+        {
+            switch (mouse)
+            {
+                case 0:
+                    GameObject.Find("Player").GetComponent<PlayerManager>().ThrowGrenade();
+                    break;
+            }
         }
     }
 

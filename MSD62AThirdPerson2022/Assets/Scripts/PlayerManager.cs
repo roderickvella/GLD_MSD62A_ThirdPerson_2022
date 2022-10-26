@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    public GameObject grenade;
+    public Transform grenadeSpawnPosition;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -22,5 +25,12 @@ public class PlayerManager : MonoBehaviour
             GameManager.Instance.OnChangeGameState(GameManager.GameState.AreaA);
         else if (collision.gameObject.name == "Plane2")
             GameManager.Instance.OnChangeGameState(GameManager.GameState.AreaB);
+    }
+
+    public void ThrowGrenade()
+    {
+        //launch the grenade
+        Instantiate(grenade, grenadeSpawnPosition.position, grenadeSpawnPosition.rotation);
+
     }
 }
